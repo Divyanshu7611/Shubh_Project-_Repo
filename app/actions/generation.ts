@@ -23,6 +23,7 @@ const toBase64Uri = async (filePath: string, mimeType: string) => {
 
 export async function generatePosterBuffer(eventId: string): Promise<Buffer | null> {
     try {
+        await connectToDatabase()
         const event = await Event.findById(eventId).lean<IEvent>();
         if (!event) throw new Error('Event not found');
 
