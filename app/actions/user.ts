@@ -300,14 +300,7 @@ export async function logout() {
 
 // THIS IS THE FULLY UPDATED FUNCTION
 export async function registerStudents(studentData:{name:string,email:string,rollNumber:string, universityRollNo:string, eventName:string,branch:string, phoneNumber:string,
-  cgpa: string,  
-  back: string,
-  summary: string,
-  clubs: string,
-  aim: string,
-  believe: string,
-  expect: string,
-  domain: string[],
+  cgpa: string
 }) { 
   try { 
     await connectToDatabase();

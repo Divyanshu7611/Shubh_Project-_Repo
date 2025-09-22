@@ -49,22 +49,10 @@ const formSchema = z.object({
     .string()
     .min(3, { message: "Roll number must be at least 3 characters" }),
 
-    // new gagan
-      cgpa: z.string().min(1, { message: "CGPA is required" }),
-      back: z.string().min(1, { message: "Back count is required" }),
-      summary: z.string().min(1, { message: "This field is required" }),
-        clubs: z.string().min(1, { message: "Clubs field is required" }),
+  // new gagan
+  cgpa: z.string().min(1, { message: "CGPA is required" })
 
-         aim: z.string().min(2, { message: "Aim is required" }),
-  believe: z.string().min(2, { message: "This field is required" }),
-  expect: z.string().min(2, { message: "This field is required" }),
-  // domain: z.array(z.string()).min(1, { message: "Select at least one domain" }),
-  domain: z
-  .array(z.string())
-  .min(1, { message: "Select at least one domain" })
-  .max(2, { message: "You can select up to 2 domains only" }),
-
-     // new end 
+  // new end 
 });
 
 export default function RegisterPage() {
@@ -94,18 +82,11 @@ export default function RegisterPage() {
       branch: "",
       year: "",
       phoneNumber: "",
-      
-      //new gagan
-       cgpa: "",           
-    back: "",           
-    summary: "", 
-     clubs: "",
 
-     aim: "",
-    believe: "",
-    expect: "",
-    domain: [],
-    //new  end
+      //new gagan
+      cgpa: "",
+
+      //new  end
     },
   });
 
@@ -145,7 +126,7 @@ export default function RegisterPage() {
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-          <img src="/RTU logo.png" alt="Logo" className="h-8 w-8" />
+            <img src="/RTU logo.png" alt="Logo" className="h-8 w-8" />
             <h1 className="text-xl font-bold">Event Management System</h1>
           </div>
           <Link href="/">
@@ -285,7 +266,7 @@ export default function RegisterPage() {
                             className="w-full border border-input rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-ring"
                           >
                             <option value="">Select an event</option>
-                            {events.map((event:any) => (
+                            {events.map((event: any) => (
                               <option key={event._id} value={event.eventName}>
                                 {event.eventName}
                               </option>
@@ -349,7 +330,7 @@ export default function RegisterPage() {
                     </FormItem>
                   )}
                 />
-
+                {/* 
                 <FormField
                   control={form.control}
                   name="back"
@@ -362,8 +343,8 @@ export default function RegisterPage() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-
+                /> */}
+                {/* 
                 <FormField
                   control={form.control}
                   name="summary"
@@ -376,9 +357,9 @@ export default function RegisterPage() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="clubs"
                   render={({ field }) => (
@@ -390,8 +371,8 @@ export default function RegisterPage() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-
+                /> */}
+                {/* 
                 <FormField
                   control={form.control}
                   name="domain"
@@ -423,8 +404,8 @@ export default function RegisterPage() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-
+                /> */}
+                {/* 
                 <FormField
                   control={form.control}
                   name="aim"
@@ -437,9 +418,9 @@ export default function RegisterPage() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="believe"
                   render={({ field }) => (
@@ -451,9 +432,9 @@ export default function RegisterPage() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="expect"
                   render={({ field }) => (
@@ -465,7 +446,7 @@ export default function RegisterPage() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <Button
                   type="submit"
@@ -496,7 +477,7 @@ export default function RegisterPage() {
           <span>
             © {new Date().getFullYear()} Event Management System. All rights reserved.
           </span>
-          <span className="text-sm">Developed By Placement Team</span>
+          <span className="text-sm">Developed By Team CodeX</span>
         </div>
       </footer>
     </div>
