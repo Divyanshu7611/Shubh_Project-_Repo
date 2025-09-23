@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { z } from "zod";
@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getEvents } from "../actions/events";
 import {
   Card,
   CardContent,
@@ -25,51 +24,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { GraduationCap, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { registerStudents } from "@/app/actions/user";
 
+// ✅ Validation Schema
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
-  branch: z
-    .string()
-    .min(2, { message: "Branch must be at least 2 characters" }),
+  branch: z.string().min(2, { message: "Branch must be at least 2 characters" }),
   year: z.string().min(1, { message: "Year is required" }),
-  phoneNumber: z
-    .string()
-    .min(10, { message: "Phone number must be at least 10 digits" }),
-  eventName: z
-    .string()
-    .min(2, { message: "Event name must be at least 2 characters" }),
+  phoneNumber: z.string().min(10, { message: "Phone number must be at least 10 digits" }),
   universityRollNo: z.string().min(2, {
     message: "University roll number must be at least 2 characters",
   }),
-  rollNumber: z
-    .string()
-    .min(3, { message: "Roll number must be at least 3 characters" }),
-
-  // new gagan
-  cgpa: z.string().min(1, { message: "CGPA is required" })
-
-  // new end 
+  rollNumber: z.string().min(3, { message: "Roll number must be at least 3 characters" }),
+  cgpa: z.string().min(1, { message: "CGPA is required" }),
 });
 
 export default function RegisterPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [events, setEvents] = useState<any>([]);
-
-  useEffect(() => {
-    const getEventData = async () => {
-      const res = await getEvents();
-      if (res) {
-        setEvents(res);
-      }
-    };
-    getEventData();
-  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,36 +54,30 @@ export default function RegisterPage() {
       email: "",
       rollNumber: "",
       universityRollNo: "",
-      eventName: "",
       branch: "",
       year: "",
       phoneNumber: "",
-
-      //new gagan
       cgpa: "",
-
-      //new  end
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      console.log("Form values:", values); // Debugging line
+      console.log("Form values:", values);
       const result = await registerStudents(values);
 
       if (result.success) {
         toast({
           title: "Registration successful",
-          description: "Your have Successfully Registered.",
+          description: "You have successfully registered.",
         });
         router.push(`/student-dashboard?userId=${result.userId}`);
       } else {
         toast({
           variant: "destructive",
           title: "Registration failed",
-          description:
-            result.error || "Something went wrong. Please try again.",
+          description: result.error || "Something went wrong. Please try again.",
         });
       }
     } catch (error) {
@@ -123,6 +93,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -138,20 +109,20 @@ export default function RegisterPage() {
         </div>
       </header>
 
+      {/* Main */}
       <main className="flex-1 container mx-auto px-4 py-8 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-xl md:text-2xl">Student Registration</CardTitle>
             <CardDescription className="text-xs md:text-sm">
-              Register Yourself to get your QR code
+              Register yourself to get your QR code
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                {/* Name */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -166,6 +137,7 @@ export default function RegisterPage() {
                   )}
                 />
 
+                {/* Email */}
                 <FormField
                   control={form.control}
                   name="email"
@@ -173,17 +145,14 @@ export default function RegisterPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="your.email@gmail.com"
-                          {...field}
-                        />
+                        <Input type="email" placeholder="your.email@gmail.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
+                {/* Branch */}
                 <FormField
                   control={form.control}
                   name="branch"
@@ -216,6 +185,7 @@ export default function RegisterPage() {
                   )}
                 />
 
+                {/* Year */}
                 <FormField
                   control={form.control}
                   name="year"
@@ -239,6 +209,7 @@ export default function RegisterPage() {
                   )}
                 />
 
+                {/* Phone */}
                 <FormField
                   control={form.control}
                   name="phoneNumber"
@@ -253,42 +224,7 @@ export default function RegisterPage() {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="eventName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Event Name</FormLabel>
-                      <FormControl>
-                        {events.length > 0 ? (
-                          <select
-                            {...field}
-                            className="w-full border border-input rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-ring"
-                          >
-                            <option value="">Select an event</option>
-                            {events.map((event: any) => (
-                              <option key={event._id} value={event.eventName}>
-                                {event.eventName}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <select
-                            {...field}
-                            className="w-full border border-input rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-ring"
-                          >
-                            <option value="">Select an event</option>
-                            <option value="Core Team Recruitment">
-                              Core Team Recruitment
-                            </option>
-                          </select>
-                        )}
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
+                {/* University Roll */}
                 <FormField
                   control={form.control}
                   name="universityRollNo"
@@ -296,13 +232,14 @@ export default function RegisterPage() {
                     <FormItem>
                       <FormLabel>University Roll Number</FormLabel>
                       <FormControl>
-                        <Input placeholder="22EUCCS033" {...field} />
+                        <Input placeholder="22EUCCS0XX" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
+                {/* College Roll */}
                 <FormField
                   control={form.control}
                   name="rollNumber"
@@ -310,13 +247,14 @@ export default function RegisterPage() {
                     <FormItem>
                       <FormLabel>College Roll Number</FormLabel>
                       <FormControl>
-                        <Input placeholder="22/285" {...field} />
+                        <Input placeholder="22/2XX" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
+                {/* CGPA */}
                 <FormField
                   control={form.control}
                   name="cgpa"
@@ -330,141 +268,18 @@ export default function RegisterPage() {
                     </FormItem>
                   )}
                 />
-                {/* 
-                <FormField
-                  control={form.control}
-                  name="back"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>No. of Active Backlogs</FormLabel>
-                      <FormControl>
-                        <Input placeholder="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-                {/* 
-                <FormField
-                  control={form.control}
-                  name="summary"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Why should we have you in PTP?</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Tell us about yourself..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
 
-                {/* <FormField
-                  control={form.control}
-                  name="clubs"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Active in which Clubs? (Write NONE if not active in any)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="NONE" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-                {/* 
-                <FormField
-                  control={form.control}
-                  name="domain"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Select your preferred domain(s) [MAX:2]</FormLabel>
-                      <div className="grid grid-cols-2 gap-2">
-                        {["Management","Graphic Designer","Video Editing","Photography","Content Writer","HR HEAD","Web Developer(Next.js Preferred)"].map((domain) => (
-                          <label key={domain} className="flex items-center space-x-2">
-                            <input
-                              type="checkbox"
-                              value={domain}
-                              checked={field.value?.includes(domain)}
-                              onChange={(e) => {
-                                const currentValues = field.value || [];
-                                if (e.target.checked) {
-                                  if (currentValues.length < 2) {
-                                    field.onChange([...currentValues, domain]);
-                                  }
-                                } else {
-                                  field.onChange(currentValues.filter((d) => d !== domain));
-                                }
-                              }}
-                            />
-                            <span>{domain}</span>
-                          </label>
-                        ))}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-                {/* 
-                <FormField
-                  control={form.control}
-                  name="aim"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>What is your aim?</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your career goals..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-
-                {/* <FormField
-                  control={form.control}
-                  name="believe"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Do you believe joining the PTP will lead to placement opportunity?</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your thoughts..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-
-                {/* <FormField
-                  control={form.control}
-                  name="expect"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>What do you expect from PTP?</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your expectations..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? "Registering..." : "Register"}
                 </Button>
               </form>
             </Form>
           </CardContent>
+
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
               Already registered?{" "}
-              <Link
-                href="/student-dashboard"
-                className="text-primary underline underline-offset-4"
-              >
+              <Link href="/student-dashboard" className="text-primary underline underline-offset-4">
                 Go to Dashboard
               </Link>
             </p>
@@ -472,11 +287,10 @@ export default function RegisterPage() {
         </Card>
       </main>
 
+      {/* Footer */}
       <footer className="border-t py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground flex-col flex items-center">
-          <span>
-            © {new Date().getFullYear()} Event Management System. All rights reserved.
-          </span>
+          <span>© {new Date().getFullYear()} Event Management System. All rights reserved.</span>
           <span className="text-sm">Developed By Team CodeX</span>
         </div>
       </footer>
